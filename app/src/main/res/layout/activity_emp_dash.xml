@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF"
+    tools:context=".EmpDash">
+
+    <!-- View Active Tasks Button -->
+    <Button
+        android:id="@+id/view_active_tasks_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:text="@string/active_tasks"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- View Completed Tasks Button -->
+    <Button
+        android:id="@+id/view_completed_tasks_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:text="@string/completed_tasks"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- View Your Tasks Button -->
+    <Button
+        android:id="@+id/view_your_tasks_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:text="@string/your_tasks"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Log Hours Button -->
+    <Button
+        android:id="@+id/log_hours_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:text="@string/log_hours"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="@string/logout"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

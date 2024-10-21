@@ -13,6 +13,30 @@
         android:theme="@style/Theme.XBCAD7319"
         tools:targetApi="31">
         <activity
+            android:name=".YourTasks"
+            android:exported="false" />
+        <activity
+            android:name=".HoursWorked"
+            android:exported="false" />
+        <activity
+            android:name=".CompletedTasks"
+            android:exported="false" />
+        <activity
+            android:name=".ActiveTasks"
+            android:exported="false" />
+        <activity
+            android:name=".CreateEmp"
+            android:exported="false" />
+        <activity
+            android:name=".CreateTask"
+            android:exported="false" />
+        <activity
+            android:name=".EmpDash"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDash"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
