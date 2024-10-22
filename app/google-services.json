@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "208779387245",
+    "project_id": "ia-workflow",
+    "storage_bucket": "ia-workflow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208779387245:android:a4df5fd551599838167a64",
+        "android_client_info": {
+          "package_name": "com.example.xbcad7319"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz_4gSXzl6vgVWjup5yssvfjJPuvR7kXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
