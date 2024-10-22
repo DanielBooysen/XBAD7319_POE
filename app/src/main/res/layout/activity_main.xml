@@ -74,10 +74,9 @@
             android:textColor="#000000" />
 
         <TextView
-            android:id="@+id/sign_up_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please speak to an IA Workflow admin."
+            android:text="@string/please_speak_to_an_ia_workflow_admin"
             android:textColor="#32CD32"
             android:textStyle="bold" />
     </LinearLayout>
