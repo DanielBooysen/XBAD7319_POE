@@ -42,6 +42,16 @@
         android:hint="Due Date ( YYYY-MM-DD)"
         android:inputType="text" />
 
+    <Spinner
+        android:id="@+id/employeeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Assign Employee"
+        android:layout_gravity="center"/>
+
     <Button
         android:id="@+id/logTaskButton"
         android:layout_width="wrap_content"

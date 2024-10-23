@@ -1,8 +1,10 @@
 package com.example.xbcad7319
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,35 +33,57 @@ class CreateTask : AppCompatActivity() {
         val descriptionEditText: EditText = findViewById(R.id.descriptionEditText)
         val dueDateEditText: EditText = findViewById(R.id.dueDateEditText)
         val logTaskButton: Button = findViewById(R.id.logTaskButton)
+        val employeeSpinner: Spinner = findViewById(R.id.employeeSpinner)
+
+        // Fetch employees from Firestore
+        db.collection("Users")
+            .whereEqualTo("role", "Employee")
+            .get()
+            .addOnSuccessListener { documents ->
+                val employeeList = mutableListOf("Unassigned")
+                for (document in documents) {
+                    val employeeName = document.getString("name") ?: "Unknown"
+                    employeeList.add(employeeName)
+                }
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, employeeList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                employeeSpinner.adapter = adapter
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error fetching employees: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+
 
         logTaskButton.setOnClickListener {
             val taskName = taskNameEditText.text.toString().trim()
             val description = descriptionEditText.text.toString().trim()
             val dueDate = dueDateEditText.text.toString().trim()
+            val selectedEmployee = employeeSpinner.selectedItem.toString()
 
             if (taskName.isEmpty() || description.isEmpty() || dueDate.isEmpty()) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Get the current user ID
+            val assignedEmployee = if (selectedEmployee == "Unassigned") null else selectedEmployee
             val currentUser = auth.currentUser
             if (currentUser != null) {
                 val userId = currentUser.uid
-                saveTaskToFirestore(userId, taskName, description, dueDate)
-            } else {
-                Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+                saveTaskToFirestore(userId, taskName, description, dueDate, assignedEmployee)
             }
         }
     }
 
-    private fun saveTaskToFirestore(userId: String, taskName: String, description: String, dueDate: String) {
+    private fun saveTaskToFirestore(userId: String, taskName: String, description: String, dueDate: String, assignedEmployee: String?) {
         val task = hashMapOf(
             "taskName" to taskName,
             "description" to description,
             "dueDate" to dueDate,
             "createdBy" to userId,
-            "createdAt" to System.currentTimeMillis()
+            "createdAt" to System.currentTimeMillis(),
+            "assignedEmployee" to assignedEmployee,
+            "status" to "In-Progress"
         )
 
         db.collection("tasks").add(task)
