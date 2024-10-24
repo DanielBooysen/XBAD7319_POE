@@ -66,7 +66,7 @@ class CreateTask : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val assignedEmployee = if (selectedEmployee == "Unassigned") null else selectedEmployee
+            val assignedEmployee = if (selectedEmployee == "Unassigned") "Unassigned" else selectedEmployee
             val currentUser = auth.currentUser
             if (currentUser != null) {
                 val userId = currentUser.uid
@@ -89,7 +89,6 @@ class CreateTask : AppCompatActivity() {
         db.collection("tasks").add(task)
             .addOnSuccessListener {
                 Toast.makeText(this, "Task successfully logged", Toast.LENGTH_SHORT).show()
-                finish() // Close the activity after successful logging
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error logging task: ${e.message}", Toast.LENGTH_SHORT).show()

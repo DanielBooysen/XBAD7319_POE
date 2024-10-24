@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ActiveTasks : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var username: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -68,15 +69,28 @@ class ActiveTasks : AppCompatActivity() {
 
     private fun acceptTask(taskId: String) {
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            db.collection("tasks").document(taskId)
-                .update("assignedEmployee", currentUser.displayName)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Task accepted!", Toast.LENGTH_SHORT).show()
-                    recreate() // Reload the activity to reflect the changes
+        val uid = currentUser?.uid
+
+        if (uid != null) {
+            val userRef = db.collection("Users").document(uid)
+            userRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        username = document.getString("name").toString()
+
+                        db.collection("tasks").document(taskId)
+                            .update("assignedEmployee", username)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Task accepted!", Toast.LENGTH_SHORT).show()
+                                recreate() // Reload the activity to reflect the changes
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Failed to accept task.", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to accept task.", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener { exception ->
+                    println("Error getting document: $exception")
                 }
         }
     }

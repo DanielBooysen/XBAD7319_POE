@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class YourTasks : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var username: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,39 +38,52 @@ class YourTasks : AppCompatActivity() {
 
     private fun loadYourTasks() {
         val currentUser = auth.currentUser
+        val uid = currentUser?.uid
         val yourTasksLayout: LinearLayout = findViewById(R.id.yourTasksLayout)
-        if (currentUser != null) {
-            db.collection("tasks")
-                .whereEqualTo("assignedEmployee", currentUser.displayName)
-                .get()
-                .addOnSuccessListener { tasks ->
-                    for (task in tasks) {
-                        val taskView = layoutInflater.inflate(R.layout.task_item, null)
-                        val taskNameTextView: TextView =
-                            taskView.findViewById(R.id.taskNameTextView)
-                        val statusTextView: TextView = taskView.findViewById(R.id.statusTextView)
-                        val updateButton: Button = taskView.findViewById(R.id.updateButton)
-                        val workButton: Button = taskView.findViewById(R.id.workButton)
 
-                        val taskName = task.getString("taskName") ?: "Unknown"
-                        val taskStatus = task.getString("status") ?: "In-Progress"
+        if (uid != null) {
+            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+            userRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        username = document.getString("name").toString()
 
-                        taskNameTextView.text = "Task: $taskName"
-                        statusTextView.text = "Status: $taskStatus"
+                        db.collection("tasks")
+                            .whereEqualTo("assignedEmployee", username)
+                            .get()
+                            .addOnSuccessListener { tasks ->
+                                for (task in tasks) {
+                                    val taskView = layoutInflater.inflate(R.layout.task_item, null)
+                                    val taskNameTextView: TextView =
+                                        taskView.findViewById(R.id.taskNameTextView)
+                                    val statusTextView: TextView = taskView.findViewById(R.id.statusTextView)
+                                    val updateButton: Button = taskView.findViewById(R.id.updateButton)
+                                    val workButton: Button = taskView.findViewById(R.id.workButton)
 
-                        updateButton.visibility = View.VISIBLE
-                        workButton.visibility = View.VISIBLE
+                                    val taskName = task.getString("taskName") ?: "Unknown"
+                                    val taskStatus = task.getString("status") ?: "In-Progress"
 
-                        updateButton.setOnClickListener {
-                            showUpdateConfirmationDialog(taskId.toString())
-                        }
+                                    taskNameTextView.text = "Task: $taskName"
+                                    statusTextView.text = "Status: $taskStatus"
 
-                        workButton.setOnClickListener {
-                            showWorkDialog()
-                        }
+                                    updateButton.visibility = View.VISIBLE
+                                    workButton.visibility = View.VISIBLE
 
-                        yourTasksLayout.addView(taskView)
+                                    updateButton.setOnClickListener {
+                                        showUpdateConfirmationDialog(task.id)
+                                    }
+
+                                    workButton.setOnClickListener {
+                                        showWorkDialog()
+                                    }
+
+                                    yourTasksLayout.addView(taskView)
+                                }
+                            }
                     }
+                }
+                .addOnFailureListener { exception ->
+                    println("Error getting document: $exception")
                 }
         }
     }
@@ -90,14 +104,18 @@ class YourTasks : AppCompatActivity() {
 
     // Update the Task Status to "Completed" in Firestore
     private fun updateTaskStatusToCompleted(taskId: String) {
+        // Log the taskId for debugging
+        println("Updating task with ID: $taskId")
+
         db.collection("tasks").document(taskId)
             .update("status", "Completed")
             .addOnSuccessListener {
                 Toast.makeText(this, "Task marked as completed!", Toast.LENGTH_SHORT).show()
                 recreate()  // Reload the activity to reflect changes
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to update task.", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to update task: ${e.message}", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
             }
     }
 
