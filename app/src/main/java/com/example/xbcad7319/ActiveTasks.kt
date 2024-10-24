@@ -39,6 +39,10 @@ class ActiveTasks : AppCompatActivity() {
         val activeTasksLayout: LinearLayout = findViewById(R.id.activeTasksLayout)
 
         db.collection("tasks")
+
+            // Only fetch tasks that are not completed
+            .whereNotEqualTo("status", "Completed")
+
             .get()
             .addOnSuccessListener { tasks ->
                 for (task in tasks) {
