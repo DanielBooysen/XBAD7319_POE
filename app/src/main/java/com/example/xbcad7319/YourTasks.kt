@@ -42,8 +42,8 @@ class YourTasks : AppCompatActivity() {
         val yourTasksLayout: LinearLayout = findViewById(R.id.yourTasksLayout)
 
         if (uid != null) {
-            val userRef = db.collection("users").document(uid)
-            userRef.get()
+            db.collection("Users").document(uid)
+                .get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         username = document.getString("name").toString()
