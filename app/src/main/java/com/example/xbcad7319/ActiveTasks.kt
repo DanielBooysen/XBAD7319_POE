@@ -33,6 +33,12 @@ class ActiveTasks : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         loadActiveTasks()
+
+        // Set up the Back button
+        val backButton: Button = findViewById(R.id.back_button)
+        backButton.setOnClickListener {
+            navigateToDashboard()
+        }
     }
 
     private fun loadActiveTasks() {
@@ -96,6 +102,32 @@ class ActiveTasks : AppCompatActivity() {
                 }
                 .addOnFailureListener { exception ->
                     println("Error getting document: $exception")
+                }
+        }
+    }
+
+    private fun navigateToDashboard() {
+        val currentUser = auth.currentUser
+        val userId = currentUser?.uid
+        if (userId != null) {
+            // Fetch user role from Firestore
+            db.collection("Users").document(userId).get()
+                .addOnSuccessListener { document ->
+                    val role = document.getString("role")
+                    if (role == "Administrator") {
+                        // Navigate back to Admin dashboard
+                        val intent = Intent(this, AdminDash::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else if (role == "Employee") {
+                        // Navigate back to Employee dashboard
+                        val intent = Intent(this, EmpDash::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Error fetching user role", Toast.LENGTH_SHORT).show()
                 }
         }
     }
