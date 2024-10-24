@@ -42,7 +42,7 @@ class YourTasks : AppCompatActivity() {
         val yourTasksLayout: LinearLayout = findViewById(R.id.yourTasksLayout)
 
         if (uid != null) {
-            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+            val userRef = db.collection("users").document(uid)
             userRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
