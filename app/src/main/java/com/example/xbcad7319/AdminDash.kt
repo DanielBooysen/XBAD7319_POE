@@ -3,23 +3,32 @@ package com.example.xbcad7319
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminDash : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_admin_dash)
+
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Set up buttons
         val activeTasksButton = findViewById<Button>(R.id.active_tasks_button)
         val completedTasksButton = findViewById<Button>(R.id.completed_tasks_button)
         val yourTasksButton = findViewById<Button>(R.id.your_tasks_button)
@@ -28,52 +37,53 @@ class AdminDash : AppCompatActivity() {
         val logTaskButton = findViewById<Button>(R.id.log_task_button)
         val logoutButton = findViewById<Button>(R.id.logout_button)
 
-        // Set click listeners for each button
+        // Button listeners with debugging
         activeTasksButton.setOnClickListener {
-            // Navigate to ActiveTasks activity
-            val intent = Intent(this, ActiveTasks::class.java)
-            startActivity(intent)
-            finish()
+            startActivity(Intent(this, ActiveTasks::class.java))
         }
 
         completedTasksButton.setOnClickListener {
-            // Navigate to CompletedTasks activity
-            val intent = Intent(this, CompletedTasks::class.java)
-            startActivity(intent)
-            finish()
+            startActivity(Intent(this, CompletedTasks::class.java))
         }
 
         yourTasksButton.setOnClickListener {
-            // Navigate to YourTasks activity
-            val intent = Intent(this, YourTasks::class.java)
-            startActivity(intent)
-            finish()
+            startActivity(Intent(this, YourTasks::class.java))
         }
 
         hoursWorkedButton.setOnClickListener {
-            // Navigate to HoursWorked activity
-            val intent = Intent(this, HoursWorked::class.java)
-            startActivity(intent)
-            finish()
+            navigateBasedOnRole()
         }
 
         addEmployeeButton.setOnClickListener {
-            // Navigate to CreateEmp activity to add a new employee
-            val intent = Intent(this, CreateEmp::class.java)
-            startActivity(intent)
-            finish()
+            startActivity(Intent(this, CreateEmp::class.java))
         }
 
         logTaskButton.setOnClickListener {
-            // Navigate to CreateTask activity to log a new task
-            val intent = Intent(this, CreateTask::class.java)
-            startActivity(intent)
-            finish()
+            startActivity(Intent(this, CreateTask::class.java))
         }
 
         logoutButton.setOnClickListener {
-            // Perform logout operation
-            finish() // Finish activity and return to login
+            finish() // Perform logout
+        }
+    }
+
+    private fun navigateBasedOnRole() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            db.collection("Users").document(currentUser.uid).get()
+                .addOnSuccessListener { document ->
+                    val role = document.getString("role")
+                    if (role == "Administrator") {
+                        startActivity(Intent(this, AdminTaskDetails::class.java))
+                    } else {
+                        startActivity(Intent(this, HoursWorked::class.java))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error checking user role: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
         }
     }
 }

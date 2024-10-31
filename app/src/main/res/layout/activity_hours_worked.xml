@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HoursWorked">
+    android:padding="16dp"
+    android:background="#f9f9f9">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Task Name Display -->
+        <TextView
+            android:id="@+id/taskNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Hours Worked Input -->
+        <EditText
+            android:id="@+id/hoursEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Hours Worked"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/editbox_background_normal" />
+
+        <!-- Log Hours Button -->
+        <Button
+            android:id="@+id/logHoursButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log Hours"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Back to Previous Screen Button -->
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FF0000"
+            android:text="Back to Previous Screen"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:padding="12dp"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

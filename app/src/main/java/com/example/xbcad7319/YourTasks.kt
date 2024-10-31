@@ -19,6 +19,7 @@ class YourTasks : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var username: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +30,6 @@ class YourTasks : AppCompatActivity() {
             insets
         }
 
-        // Initialize Firestore and Firebase Authentication
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -60,8 +60,7 @@ class YourTasks : AppCompatActivity() {
                             .addOnSuccessListener { tasks ->
                                 for (task in tasks) {
                                     val taskView = layoutInflater.inflate(R.layout.task_item, null)
-                                    val taskNameTextView: TextView =
-                                        taskView.findViewById(R.id.taskNameTextView)
+                                    val taskNameTextView: TextView = taskView.findViewById(R.id.taskNameTextView)
                                     val statusTextView: TextView = taskView.findViewById(R.id.statusTextView)
                                     val updateButton: Button = taskView.findViewById(R.id.updateButton)
                                     val workButton: Button = taskView.findViewById(R.id.workButton)
@@ -80,7 +79,9 @@ class YourTasks : AppCompatActivity() {
                                     }
 
                                     workButton.setOnClickListener {
-                                        showWorkDialog()
+                                        val intent = Intent(this@YourTasks, HoursWorked::class.java)
+                                        intent.putExtra("taskId", task.id) // Pass task ID to HoursWorked
+                                        startActivity(intent)
                                     }
 
                                     yourTasksLayout.addView(taskView)
@@ -108,16 +109,14 @@ class YourTasks : AppCompatActivity() {
         dialog.show()
     }
 
-    // Update the Task Status to "Completed" in Firestore
     private fun updateTaskStatusToCompleted(taskId: String) {
-        // Log the taskId for debugging
         println("Updating task with ID: $taskId")
 
         db.collection("tasks").document(taskId)
             .update("status", "Completed")
             .addOnSuccessListener {
                 Toast.makeText(this, "Task marked as completed!", Toast.LENGTH_SHORT).show()
-                recreate()  // Reload the activity to reflect changes
+                recreate()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to update task: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -125,34 +124,18 @@ class YourTasks : AppCompatActivity() {
             }
     }
 
-    // Show the Work Hours Dialog
-    private fun showWorkDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Log Work Hours")
-        builder.setMessage("Please log work hours in the appropriate window.")
-        builder.setPositiveButton("Ok") { _, _ ->
-            val intent = Intent(this, HoursWorked::class.java)
-            startActivity(intent)
-        }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
     private fun navigateToDashboard() {
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
         if (userId != null) {
-            // Fetch user role from Firestore
             db.collection("Users").document(userId).get()
                 .addOnSuccessListener { document ->
                     val role = document.getString("role")
                     if (role == "Administrator") {
-                        // Navigate back to Admin dashboard
                         val intent = Intent(this, AdminDash::class.java)
                         startActivity(intent)
                         finish()
                     } else if (role == "Employee") {
-                        // Navigate back to Employee dashboard
                         val intent = Intent(this, EmpDash::class.java)
                         startActivity(intent)
                         finish()
