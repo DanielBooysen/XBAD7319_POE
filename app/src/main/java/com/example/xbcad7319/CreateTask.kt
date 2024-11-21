@@ -13,7 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
+// This code implements Spinner functionality for task selection
+//The following code was taken from developer.android.com
+//Author: Android Developers
+//Link: https://developer.android.com/develop/ui/views/components/spinner
 class CreateTask : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
