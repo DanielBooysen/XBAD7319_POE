@@ -9,6 +9,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class HoursWorked : AppCompatActivity() {
+    //Error handling for spinners and user inputs was adapted from:
+    //Title: Spinner in Android with Example
+    //Author: GeeksforGeeks
+    //Link: https://www.geeksforgeeks.org/spinner-in-android-using-java-with-example/
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private var taskId: String? = null
