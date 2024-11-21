@@ -14,6 +14,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+//The dynamic addition of task views using LinearLayout and custom layouts is inspired by:
+//Title: Adding Views Dynamically in Android
+//Author: Tutorialspoint
+//Link: https://www.tutorialspoint.com/add-and-remove-views-in-android-dynamically
+
 class ActiveTasks : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth

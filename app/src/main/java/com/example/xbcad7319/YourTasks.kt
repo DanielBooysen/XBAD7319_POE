@@ -16,6 +16,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class YourTasks : AppCompatActivity() {
+    //The Firebase Firestore query logic for fetching and updating tasks was adapted from:
+    //Title: Querying Firestore Collections in Android
+    //Author: Firebase Documentation
+    //Link: https://firebase.google.com/docs/firestore/query-data/listen
+
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var username: String
