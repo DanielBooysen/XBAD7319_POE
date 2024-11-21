@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Apex Solutions</string>
+    <string name="app_name">IA Workflow</string>
     <string name="active_tasks">Active Tasks</string>
     <string name="completed_tasks">Completed Tasks</string>
     <string name="your_tasks">Your Tasks</string>
